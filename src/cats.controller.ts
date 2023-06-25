@@ -98,5 +98,64 @@ export class CatsController {
           
         }
 }
+  
+@Post('default')
+findProductdefault(@Body() body) {
+    //console.log(body.key)
+    // đọc file csv
+
+    const workbook = xlsx.readFile('D:\\nestjs_tutorial\\tichhop\\src\\fulldata.xls');
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const jsonData = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
+    const headerRow = jsonData[0] as string[];
+    // đọc cột name 
+    const columnData = jsonData.map(row => row[2]);
+    const columColor = jsonData.map(row => row[5]);
+    const columnRom = jsonData.map(row => row[7]);
+    //đẩy vào tf idf
+    var keywordArray = body.key;
+    console.log(keywordArray);
+    // kiểm tra bộ nhớ
+   var arr=[];
+    for (let i = 1; i < jsonData.length; i++) {
+        // Lấy giá trị của phần tử tại vị trí i
+        var temp = jsonData[i][9].toLowerCase();
+        if (temp==keywordArray)
+        arr.push(jsonData[i])
+      }
+     return arr;
+      //for (let )
+      // đếm số lần xuất hiện của các từ trong từ khóa ứng với mỗi sản phẩm
+   
+}
+
+@Post('all')
+findProductdefault_2(@Body() body) {
+    //console.log(body.key)
+    // đọc file csv
+
+    const workbook = xlsx.readFile('D:\\nestjs_tutorial\\tichhop\\src\\fulldata.xls');
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const jsonData = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
+    const headerRow = jsonData[0] as string[];
+    // đọc cột name 
+    //đẩy vào tf idf
+    var keywordArray = body.key;
+    console.log(keywordArray);
+    // kiểm tra bộ nhớ
+   var arr=[];
+    for (let i = 1; i < jsonData.length; i++) {
+        // Lấy giá trị của phần tử tại vị trí i
+        var temp = jsonData[i][9].toLowerCase();
+        if (temp.includes(keywordArray))
+          arr.push(jsonData[i])
+      }
+     return arr;
+      //for (let )
+      // đếm số lần xuất hiện của các từ trong từ khóa ứng với mỗi sản phẩm
+   
+}
 }
 
